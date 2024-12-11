@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from Git repository
-                git branch: 'main', url: 'https://github.com/Shubh1321/incident_management.git'
+                git branch: 'main', credentialsId: '3b839c49-a8ba-4057-882d-8be0e139525c', url: 'https://github.com/Shubh1321/incident_management.git'
             }
         }
 
