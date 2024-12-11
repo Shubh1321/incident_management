@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        
         DOCKER_IMAGE = 'incident_management-web'
         // DOCKER_REGISTRY = 'your-docker-registry' // optional if pushing to Docker Hub or private registry
     }
