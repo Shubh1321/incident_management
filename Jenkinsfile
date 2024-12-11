@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         
-        DOCKER_IMAGE = 'incident_management-web'
+        docker_image = 'incident_management-web'
         // DOCKER_REGISTRY = 'your-docker-registry' // optional if pushing to Docker Hub or private registry
     }
 
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile
-                    bat 'docker build -t DOCKER_IMAGE .'
+                    bat 'docker build -t docker_image .'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Run the Django tests in Docker (assuming you have test cases)
-                    bat 'docker run --rm DOCKER_IMAGE python manage.py test'
+                    bat 'docker run --rm docker_image python manage.py test'
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
                     // Example for deploying via Docker (this could be specific to your environment)
-                    bat 'docker run -d -p 8000:8000 DOCKER_IMAGE'
+                    bat 'docker run -d -p 8000:8000 docker_image'
                 }
             }
         }
