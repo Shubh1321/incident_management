@@ -1,20 +1,38 @@
-# Step 1: Use an official Python runtime as a base image
-FROM python:3.10-slim
+# Stage 1: Build stage
+FROM python:3.10-slim AS builder
 
-# Step 2: Set the working directory inside the container
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory
 WORKDIR /app
 
-# Step 3: Copy the requirements file to the container
-COPY requirements.txt /app/
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc-dev && rm -rf /var/lib/apt/lists/*
 
-# Step 4: Install the Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install --prefix=/install -r requirements.txt
 
-# Step 5: Copy the rest of the application code
-COPY . /app/
+# Stage 2: Runtime stage
+FROM python:3.10-alpine
 
-# Step 6: Expose the port that the app will run on
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory
+WORKDIR /app
+
+# Copy Python dependencies from the build stage
+COPY --from=builder /install /usr/local
+
+# Copy application code
+COPY . .
+
+# Expose the application port
 EXPOSE 8000
 
-# Step 7: Set the default command to run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Command to run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "incident_management.wsgi:application"]
