@@ -50,14 +50,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Stop existing container if running
-                    bat "docker rm -f incident_management || echo 'No existing container to remove'"
+                    // // Stop existing container if running
+                    // bat "docker rm -f incident_management || echo 'No existing container to remove'"
                     // Deploy the new Docker container
                     bat "docker run --name incident_management -d -p 8000:8000 ${env.docker_image}"
                 }
             }
         }
-
+    }
     post {
         always {
             // Clean up after build (remove Docker images, containers, etc.)
