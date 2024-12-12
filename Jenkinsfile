@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile
-                    bat 'docker build -t ${docker_image} .'
+                    bat "docker build -t ${env.docker_image} ."
                 }
             }
         }
@@ -50,12 +50,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Example for deploying via Docker (this could be specific to your environment)
-                    bat 'docker run -d -p 8000:8000 ${docker_image}'
+                    // Stop existing container if running
+                    bat "docker rm -f incident_management || echo 'No existing container to remove'"
+                    // Deploy the new Docker container
+                    bat "docker run --name incident_management -d -p 8000:8000 ${env.docker_image}"
                 }
             }
         }
-    }
 
     post {
         always {
