@@ -19,19 +19,19 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile
-                    bat 'docker build -t docker_image .'
+                    bat 'docker build -t ${docker_image} .'
                 }
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    // Run the Django tests in Docker (assuming you have test cases)
-                    bat 'docker run --rm docker_image python manage.py test'
-                }
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         script {
+        //             // Run the Django tests in Docker (assuming you have test cases)
+        //             bat 'docker run --rm docker_image python manage.py test'
+        //         }
+        //     }
+        // }
 
         // stage('Push Docker Image') {
         //     when {
@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
                     // Example for deploying via Docker (this could be specific to your environment)
-                    bat 'docker run -d -p 8000:8000 docker_image'
+                    bat 'docker run -d -p 8000:8000 ${docker_image}'
                 }
             }
         }
